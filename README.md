@@ -8,7 +8,7 @@ Public-facing **product and feature design** work: narratives, prototypes, and i
 
 | Project | Summary | Link |
 |--------|---------|------|
-| **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. Includes **technical stack** and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md) · [Open prototype](AI-accounting/prototype.html) |
+| **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. Includes **technical stack** and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md)|
 
 *Add new rows above as you publish additional case studies or demos.*
 
