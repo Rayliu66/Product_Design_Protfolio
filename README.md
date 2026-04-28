@@ -44,6 +44,3 @@ On GitHub, opening an HTML file from the **Code** tab shows **source**, not a ru
 
 ---
 
-## Contact
-
-Use the contact method you prefer on your resume or LinkedIn; keep this README free of personal email if you use the repo URL publicly.
