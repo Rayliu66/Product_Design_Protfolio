@@ -23,6 +23,24 @@ Design themes: **trust** (institutional blues, clear hierarchy), **ops density**
 
 ---
 
+## Screenshots
+
+Captured at **1440×900** from [`prototype.html`](prototype.html) (hash routes). Useful for **GitHub README previews**, decks, and recruiters who skim before opening the live prototype.
+
+| Screen | Description |
+|--------|-------------|
+| ![Sign in — email](assets/screenshots/01-login-email.png) | **Sign in — email:** passwordless-style entry; institutional footer links. |
+| ![Sign in — verification](assets/screenshots/02-login-verify.png) | **Sign in — verification:** 6-digit code pattern and resend affordance. |
+| ![Dashboard](assets/screenshots/03-dashboard.png) | **Dashboard:** action cards by priority, filter pills, KPI strip, engagement table. |
+| ![Tasks — workflow log](assets/screenshots/04-tasks-workflow-log.png) | **Tasks:** workflow log with filters (workflow, category, phase, status) and export. |
+| ![Clients directory](assets/screenshots/05-clients-directory.png) | **Clients:** firm directory with status, phase, and pending actions. |
+| ![Workflow detail](assets/screenshots/06-workflow-detail-phases.png) | **Workflow detail:** phased progress, agent vs human tasks, setup checklist pattern. |
+| ![Client detail](assets/screenshots/07-client-detail.png) | **Client detail:** tabbed profile, stats, and engagement context. |
+| ![Settings](assets/screenshots/08-settings.png) | **Settings:** firm profile and operational preferences. |
+| ![HITL review panel](assets/screenshots/09-hitl-review-panel.png) | **HITL slide-over:** human review of agent output, files, and upload zone. |
+
+---
+
 ## Technical stack
 
 | Layer | Choice |
@@ -34,6 +52,7 @@ Design themes: **trust** (institutional blues, clear hierarchy), **ops density**
 | **Behavior** | **Vanilla JavaScript** (e.g. `navigateTo`, `toggleSidebar`, dashboard filters)—no React/Vue build step. |
 | **Icons** | Inline **SVG** (stroke-based) for crisp scaling and no icon-font dependency. |
 | **Data** | Hard-coded demo content only; **no API**, no persistence, no analytics SDK in this artifact. |
+| **Screenshot automation** (optional) | **Playwright** + Chromium — [`scripts/capture-all.mjs`](scripts/capture-all.mjs), `npm run screenshots` (see [Regenerating screenshots](#regenerating-screenshots)). |
 
 **Not used (by design, for this artifact):** npm bundlers, TypeScript, CSS frameworks, component libraries—keeps the prototype easy to host (e.g. GitHub Pages) and fast for reviewers to open.
 
@@ -56,6 +75,20 @@ Substitute your GitHub username and repo name. That URL is the one to paste on a
 3. Optional: from the repository root, run `python3 -m http.server 8000` and visit `http://localhost:8000/AI-accounting/prototype.html`.
 
 **Demo flow:** **Send verification code** → **Verify Identity** (demo only) → explore **Dashboard**, **Tasks**, **Clients**, **Settings**, and open a **workflow** row for the HITL panel.
+
+---
+
+## Regenerating screenshots
+
+Requires **Node.js 18+**. From this folder (`AI-accounting/`):
+
+```bash
+npm install
+npx playwright install chromium
+npm run screenshots
+```
+
+That runs [`scripts/capture-all.mjs`](scripts/capture-all.mjs) and overwrites PNGs under `assets/screenshots/`. **Dev dependency:** [`playwright`](https://playwright.dev/) (Chromium only for capture).
 
 ---
 
