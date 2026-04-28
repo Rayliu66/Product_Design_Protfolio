@@ -1,86 +1,141 @@
-# Architect Ledger — AI Bookkeeping (interactive prototype)
+# Architect Ledger — AI-assisted bookkeeping for CPAs
 
-**Architect Ledger** is a portfolio concept for an **AI-assisted bookkeeping** product aimed at accounting firms: a dashboard for **human-in-the-loop (HITL)** review, **client engagements**, and **multi-phase workflows** (onboarding through year-end). This folder contains a **clickable high-fidelity HTML prototype**—no backend—used to communicate layout, flows, and design intent.
+**Architect Ledger** is an **AI-assisted bookkeeping platform** for accounting firms (CPAs). The product implements the **three-service architecture** from the **v1.3 orchestration plan**: a typed dashboard, an AI processing API with async workers, optional **n8n** orchestration in cloud, and shared data plane services.
 
-**Related product / MVP notes (Notion):** [MVP version — implementation page](https://www.notion.so/MVP-version-implementation-page-34c8d41a5cff80fb855ff9f5cd4c57ca?source=copy_link)
+This **GitHub-facing folder** is intentionally **not** the full application codebase. It **discloses only the interactive HTML prototype** (plus screenshots and optional capture tooling) so recruiters and collaborators can review **UX, flows, and design intent** without exposing private services, schemas, or keys.
 
 ---
 
-## What’s in the prototype
+## Product architecture and technical stack (v1.3)
 
-| Area | Description |
+| Layer | Technology | Role |
+|--------|------------|------|
+| **Frontend** (`frontend/`) | **Next.js 15**, **TypeScript**, **Tailwind CSS**, **TanStack Query (React Query)** | Firm dashboard: auth shell, tasks, clients, engagements, settings, review surfaces (per front-end build plan §8). |
+| **Backend** (`backend/`) | **FastAPI**, **Celery**, **SQLAlchemy**, **Pydantic**, **Alembic** | AI processing service: HTTP routers (plan §16), domain logic, LLM/OCR/storage/**pgvector** integrations, background workers. |
+| **Orchestration** (`orchestration/`) | **n8n** (exported workflow JSON) | Cloud-only workflow automation; **skipped in typical local dev**. |
+| **Shared infrastructure** | **PostgreSQL 16** + **pgvector**, **Redis**, **MinIO** (S3-compatible) | Durable data, queues/cache, object storage for documents and artifacts. |
+| **Local developer experience** | **Docker Compose** (Postgres, Redis, MinIO), optional **[Tilt](https://tilt.dev)** at `http://localhost:10350` | One-command-ish local stack; Tilt is optional single-pane dev dashboard. |
+
+Implementation languages: **Python 3.12+** on the API/workers; **Node** for the Next.js app. **Caddy** and infra helpers live under `infra/` in the private monorepo.
+
+---
+
+## Source of truth (Notion)
+
+| Document | Purpose |
+|----------|---------|
+| [AI Bookkeeping Orchestration Plan v1.3 (back-end version)](https://www.notion.so/AI-Bookkeeping-Orchestration-Plan-v1-3-back-end-version-33d8d41a5cff8018977ef070724c36ba) | Orchestration, services, API shape, and backend alignment. |
+| [Front-end build plan — structure](https://www.notion.so/front-end-build-plan-stucture-34b8d41a5cff80c6bae3c3ca4cf481b3) | Routes, feature modules, and dashboard composition. |
+
+---
+
+## Monorepo layout (private implementation)
+
+The **production codebase** lives in a **private monorepo** (not published in this portfolio folder). Its layout matches the following structure for clear service boundaries and local parity with cloud:
+
+```
+.
+├── backend/                 FastAPI AI service (Python 3.12+)
+│   ├── app/
+│   │   ├── api/             HTTP routers (plan §16)
+│   │   ├── core/            Domain logic
+│   │   ├── models/          Pydantic schemas + SQLAlchemy tables
+│   │   ├── services/        LLM / OCR / storage / pgvector wrappers
+│   │   ├── config.py
+│   │   └── main.py
+│   ├── workers/             Celery workers
+│   ├── migrations/          Alembic
+│   ├── tests/
+│   └── Dockerfile
+│
+├── frontend/                Next.js 15 dashboard (TypeScript + Tailwind)
+│   └── src/
+│       ├── app/             Routes: (auth), (dashboard)
+│       ├── components/      layout, ui, common
+│       ├── features/        auth, dashboard, tasks, clients, engagements,
+│       │                      settings, review-panel (plan §8)
+│       ├── lib/               api, query, env
+│       ├── services/          Cross-feature API services
+│       ├── types/             Shared DTOs
+│       ├── providers/         AppProvider + QueryProvider
+│       ├── hooks/
+│       ├── utils/
+│       ├── constants/
+│       └── styles/
+│
+├── orchestration/           Exported n8n workflow JSON (cloud-only)
+├── infra/                   Docker-stack helpers (Postgres init SQL, Caddyfile, etc.)
+├── docs/                    Architecture notes
+├── src/                     Legacy Python POC (reference only)
+├── docker-compose.yml       Local stack: Postgres + Redis + MinIO
+├── scripts/                 dev-up, dev-down, open-tilt-ui, check-local
+├── Tiltfile                 Optional Tilt dashboard
+├── Makefile                 Developer shortcuts
+├── .env.example             Copy to `.env` (never commit real secrets)
+└── .gitignore
+```
+
+---
+
+## What this repository folder actually contains (public disclosure)
+
+| Path | Description |
 |------|-------------|
-| **Auth** | Email capture → 6-digit verification UI (passwordless-style flow; demo only). |
-| **Dashboard** | Action cards (reviews, year-end, discrepancies, onboarding, audit), filter pills, KPI-style “efficiency” strip, engagement table. |
-| **Tasks** | Workflow log with filters (workflow type, category, **phase**, status), sortable table, export CTA. |
-| **Workflow detail** | **Phase progress** (onboarding → platform setup → bank statements → transactions → year-end), expandable phase panels, **agent vs human** task rows. |
-| **HITL panel** | Slide-over review surface: agent output, file list, upload zone, approve/reject style actions (UI only). |
-| **Clients** | Directory, **client detail** with tabs, stats, and firm-facing settings patterns. |
-| **Settings** | Firm profile and preferences-style forms. |
-| **Shell** | Collapsible sidebar, sticky top bar, breadcrumbs, toasts, modals, responsive breakpoints. |
+| [`prototype.html`](prototype.html) | **Single-file** high-fidelity UI prototype (vanilla HTML/CSS/JS). Maps to dashboard, tasks, clients, workflow phases, HITL review panel, and settings—**no** Next.js runtime and **no** API calls. |
+| [`assets/screenshots/`](assets/screenshots/) | Static captures of the prototype for README and decks. |
+| [`scripts/capture-all.mjs`](scripts/capture-all.mjs), [`package.json`](package.json) | Optional **Playwright** automation to regenerate screenshots. |
 
-Design themes: **trust** (institutional blues, clear hierarchy), **ops density** (tables, badges, phases), and **AI + human** collaboration surfaced explicitly in the workflow UI.
+**Not included here:** `frontend/`, `backend/`, `orchestration/`, `infra/`, Compose/Tilt files, or `.env`—those remain in the **private** monorepo.
 
 ---
 
-## Screenshots
+## Screenshots (prototype)
 
-Captured at **1440×900** from [`prototype.html`](prototype.html) (hash routes). Useful for **GitHub README previews**, decks, and recruiters who skim before opening the live prototype.
+Captured at **1440×900** from [`prototype.html`](prototype.html) (hash routes). Safe to embed in GitHub, LinkedIn, or slide decks.
 
 | Screen | Description |
 |--------|-------------|
-| ![Sign in — email](assets/screenshots/01-login-email.png) | **Sign in — email:** passwordless-style entry; institutional footer links. |
-| ![Sign in — verification](assets/screenshots/02-login-verify.png) | **Sign in — verification:** 6-digit code pattern and resend affordance. |
-| ![Dashboard](assets/screenshots/03-dashboard.png) | **Dashboard:** action cards by priority, filter pills, KPI strip, engagement table. |
-| ![Tasks — workflow log](assets/screenshots/04-tasks-workflow-log.png) | **Tasks:** workflow log with filters (workflow, category, phase, status) and export. |
-| ![Clients directory](assets/screenshots/05-clients-directory.png) | **Clients:** firm directory with status, phase, and pending actions. |
-| ![Workflow detail](assets/screenshots/06-workflow-detail-phases.png) | **Workflow detail:** phased progress, agent vs human tasks, setup checklist pattern. |
-| ![Client detail](assets/screenshots/07-client-detail.png) | **Client detail:** tabbed profile, stats, and engagement context. |
-| ![Settings](assets/screenshots/08-settings.png) | **Settings:** firm profile and operational preferences. |
-| ![HITL review panel](assets/screenshots/09-hitl-review-panel.png) | **HITL slide-over:** human review of agent output, files, and upload zone. |
+| ![Sign in — email](assets/screenshots/01-login-email.png) | **Sign in — email:** passwordless-style entry. |
+| ![Sign in — verification](assets/screenshots/02-login-verify.png) | **Sign in — verification:** 6-digit code pattern. |
+| ![Dashboard](assets/screenshots/03-dashboard.png) | **Dashboard:** action cards, filters, KPI strip, engagements. |
+| ![Tasks — workflow log](assets/screenshots/04-tasks-workflow-log.png) | **Tasks:** workflow log with phase/status filters. |
+| ![Clients directory](assets/screenshots/05-clients-directory.png) | **Clients:** directory with status and pending actions. |
+| ![Workflow detail](assets/screenshots/06-workflow-detail-phases.png) | **Workflow detail:** phased progress, agent vs human tasks. |
+| ![Client detail](assets/screenshots/07-client-detail.png) | **Client detail:** tabbed profile and stats. |
+| ![Settings](assets/screenshots/08-settings.png) | **Settings:** firm profile patterns. |
+| ![HITL review panel](assets/screenshots/09-hitl-review-panel.png) | **HITL slide-over:** human review of agent output and uploads. |
 
 ---
 
-## Technical stack
+## Portfolio prototype — technical stack (this artifact only)
+
+The disclosed prototype is **not** the Next.js app; it is a **standalone static page** for fast sharing and design critique.
 
 | Layer | Choice |
 |--------|--------|
-| **Delivery** | Single static file: [Open this prototype in the browser](https://rayliu66.github.io/Product_Design_Protfolio/AI-accounting/prototype.html) — open in any modern browser; optional local static server for strict file policies. |
-| **Markup** | HTML5 (`<section>` for login states, app shell with `<aside>` + main content regions). |
-| **Styling** | **Vanilla CSS**: custom properties (`:root` design tokens: color, spacing, radii, shadows), **Flexbox** and **CSS Grid**, component-scoped class naming, **`@media`** breakpoints (1024px / 768px) for sidebar and grids. |
-| **Typography** | [**Inter**](https://fonts.google.com/specimen/Inter) via Google Fonts (`font-display`-friendly link). |
-| **Behavior** | **Vanilla JavaScript** (e.g. `navigateTo`, `toggleSidebar`, dashboard filters)—no React/Vue build step. |
-| **Icons** | Inline **SVG** (stroke-based) for crisp scaling and no icon-font dependency. |
-| **Data** | Hard-coded demo content only; **no API**, no persistence, no analytics SDK in this artifact. |
-| **Screenshot automation** (optional) | **Playwright** + Chromium — [`scripts/capture-all.mjs`](scripts/capture-all.mjs), `npm run screenshots` (see [Regenerating screenshots](#regenerating-screenshots)). |
-
-**Not used (by design, for this artifact):** npm bundlers, TypeScript, CSS frameworks, component libraries—keeps the prototype easy to host (e.g. GitHub Pages) and fast for reviewers to open.
+| **Delivery** | Single file [`prototype.html`](prototype.html). |
+| **Markup / style / behavior** | HTML5, **vanilla CSS** (design tokens in `:root`, Flexbox, Grid, `@media`), **vanilla JavaScript** (routing via `location.hash`, no bundler). |
+| **Typography** | [**Inter**](https://fonts.google.com/specimen/Inter) (Google Fonts). |
+| **Icons** | Inline SVG. |
+| **Data** | Hard-coded demo content; no Postgres, Redis, or MinIO in the browser build. |
 
 ---
 
-## How to view
+## How to view the prototype
 
-**Do not rely on the GitHub “Code” file view** for `prototype.html`: GitHub displays the file as **source text**, not as a rendered web app.
+GitHub’s **Code** view for HTML shows **source**, not a running UI. Use one of these:
 
-**Option A — GitHub Pages (shareable link for recruiters)**  
-Enable [GitHub Pages](https://docs.github.com/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) on this repository (source: your default branch, folder `/` root). Then open:
+1. **GitHub Pages** — Deploy this repo from the default branch with root `/`. Then open:  
+   `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/AI-accounting/prototype.html`
 
-`https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/AI-accounting/prototype.html`
-
-Substitute your GitHub username and repo name. That URL is the one to paste on a resume or in a portfolio.
-
-**Option B — Local**  
-1. Clone or download the repository.  
-2. Open `prototype.html` in **Chrome, Edge, Safari, or Firefox** (double-click the file, or **File → Open** from the browser).  
-3. Optional: from the repository root, run `python3 -m http.server 8000` and visit `http://localhost:8000/AI-accounting/prototype.html`.
-
-**Demo flow:** **Send verification code** → **Verify Identity** (demo only) → explore **Dashboard**, **Tasks**, **Clients**, **Settings**, and open a **workflow** row for the HITL panel.
+2. **Local** — Clone the repo, open `AI-accounting/prototype.html` in a modern browser, or run `python3 -m http.server` from the repo root and open  
+   `http://localhost:8000/AI-accounting/prototype.html`.
 
 ---
 
 ## Regenerating screenshots
 
-Requires **Node.js 18+**. From this folder (`AI-accounting/`):
+From `AI-accounting/` (requires **Node.js 18+**):
 
 ```bash
 npm install
@@ -88,20 +143,16 @@ npx playwright install chromium
 npm run screenshots
 ```
 
-That runs [`scripts/capture-all.mjs`](scripts/capture-all.mjs) and overwrites PNGs under `assets/screenshots/`. **Dev dependency:** [`playwright`](https://playwright.dev/) (Chromium only for capture).
+Runs [`scripts/capture-all.mjs`](scripts/capture-all.mjs) and refreshes `assets/screenshots/*.png`.
 
 ---
 
 ## Scope and disclaimer
 
-This is a **design and UX demonstration** for a product-design portfolio. Firm names, metrics, and documents are **fictional**. It is **not** financial, legal, or tax advice, and it is **not** a production security implementation (e.g. real OTP would require a server and threat modeling).
+The **prototype** uses **fictional** firm names and metrics. It is **not** financial, legal, or tax advice, and it does **not** implement production authentication or compliance controls.
 
 ---
 
-## Repository location
+## Parent portfolio
 
-This project lives under the parent portfolio:
-
-`Product_Design_Protfolio/AI-accounting/`
-
-See the root [`README.md`](../README.md) for the full portfolio index.
+This project is listed under the public portfolio index: [`../README.md`](../README.md).

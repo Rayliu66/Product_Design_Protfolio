@@ -8,7 +8,7 @@ Public-facing **product and feature design** work: narratives and interactive pr
 
 | Project | Summary | Link |
 |--------|---------|------|
-| **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. README includes **screenshots**, **technical stack**, and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md) |
+| **Architect Ledger — AI Bookkeeping** | **CPA-facing AI bookkeeping** product (Next.js 15 + FastAPI + Celery + Postgres/pgvector + Redis + MinIO; n8n orchestration per v1.3 plan). This portfolio folder **only publishes** the **HTML prototype** plus screenshots—README documents the **full stack** and **private monorepo layout**. | [`AI-accounting/README.md`](AI-accounting/README.md) |
 
 *Add new rows as you publish additional case studies or demos.*
 
@@ -16,7 +16,7 @@ Public-facing **product and feature design** work: narratives and interactive pr
 
 ## How this repo is organized
 
-- **`AI-accounting/`** — Architect Ledger interactive prototype + project `README.md`.
+- **`AI-accounting/`** — Architect Ledger **public disclosure**: interactive `prototype.html`, screenshots, and README (full product stack + prototype-only scope).
 - **Future folders** — e.g. `project-name/` with its own `README.md`, assets, and optional `docs/`.
 
 ---
