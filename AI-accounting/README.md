@@ -4,6 +4,8 @@
 
 This **GitHub-facing folder** is intentionally **not** the full application codebase. It **discloses only the interactive HTML prototype** (plus screenshots and optional capture tooling) so recruiters and collaborators can review **UX, flows, and design intent** without exposing private services, schemas, or keys.
 
+**[Open this prototype in the browser](https://rayliu66.github.io/Product_Design_Protfolio/AI-accounting/prototype.html)** — hosted on GitHub Pages (`rayliu66` / `Product_Design_Protfolio`).
+
 ---
 
 ## Product architecture and technical stack (v1.3)
@@ -123,13 +125,9 @@ The disclosed prototype is **not** the Next.js app; it is a **standalone static 
 
 ## How to view the prototype
 
-GitHub’s **Code** view for HTML shows **source**, not a running UI. Use one of these:
+**[Open this prototype in the browser](https://rayliu66.github.io/Product_Design_Protfolio/AI-accounting/prototype.html)** (GitHub Pages — full interactive UI).
 
-1. **GitHub Pages** — Deploy this repo from the default branch with root `/`. Then open:  
-   `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/AI-accounting/prototype.html`
-
-2. **Local** — Clone the repo, open `AI-accounting/prototype.html` in a modern browser, or run `python3 -m http.server` from the repo root and open  
-   `http://localhost:8000/AI-accounting/prototype.html`.
+GitHub’s **Code** tab for `prototype.html` shows **HTML source only**, not the running app. For offline or forked copies: clone the repo, open `AI-accounting/prototype.html` locally, or run `python3 -m http.server` from the repo root and visit `http://localhost:8000/AI-accounting/prototype.html`.
 
 ---
 
