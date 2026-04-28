@@ -27,7 +27,7 @@ Design themes: **trust** (institutional blues, clear hierarchy), **ops density**
 
 | Layer | Choice |
 |--------|--------|
-| **Delivery** | Single static file: [`prototype.html`](prototype.html) — open in any modern browser; optional local static server for strict file policies. |
+| **Delivery** | Single static file: [`prototype.html`]([prototype.html](https://rayliu66.github.io/Product_Design_Protfolio/AI-accounting/prototype.html)) — open in any modern browser; optional local static server for strict file policies. |
 | **Markup** | HTML5 (`<section>` for login states, app shell with `<aside>` + main content regions). |
 | **Styling** | **Vanilla CSS**: custom properties (`:root` design tokens: color, spacing, radii, shadows), **Flexbox** and **CSS Grid**, component-scoped class naming, **`@media`** breakpoints (1024px / 768px) for sidebar and grids. |
 | **Typography** | [**Inter**](https://fonts.google.com/specimen/Inter) via Google Fonts (`font-display`-friendly link). |
