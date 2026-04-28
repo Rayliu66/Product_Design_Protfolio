@@ -41,9 +41,21 @@ Design themes: **trust** (institutional blues, clear hierarchy), **ops density**
 
 ## How to view
 
-1. Clone or download this repository.
-2. Open `AI-accounting/prototype.html` in **Chrome, Edge, Safari, or Firefox** (double-click or “Open with…”).
-3. Flow: **Send verification code** → **Verify Identity** (demo) → explore **Dashboard**, **Tasks**, **Clients**, **Settings**, and drill into a **workflow** row for the HITL panel.
+**Do not rely on the GitHub “Code” file view** for `prototype.html`: GitHub displays the file as **source text**, not as a rendered web app.
+
+**Option A — GitHub Pages (shareable link for recruiters)**  
+Enable [GitHub Pages](https://docs.github.com/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) on this repository (source: your default branch, folder `/` root). Then open:
+
+`https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/AI-accounting/prototype.html`
+
+Substitute your GitHub username and repo name. That URL is the one to paste on a resume or in a portfolio.
+
+**Option B — Local**  
+1. Clone or download the repository.  
+2. Open `prototype.html` in **Chrome, Edge, Safari, or Firefox** (double-click the file, or **File → Open** from the browser).  
+3. Optional: from the repository root, run `python3 -m http.server 8000` and visit `http://localhost:8000/AI-accounting/prototype.html`.
+
+**Demo flow:** **Send verification code** → **Verify Identity** (demo only) → explore **Dashboard**, **Tasks**, **Clients**, **Settings**, and open a **workflow** row for the HITL panel.
 
 ---
 

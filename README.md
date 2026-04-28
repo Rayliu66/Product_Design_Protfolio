@@ -1,6 +1,6 @@
 # Product Design Portfolio
 
-Public-facing **product and feature design** work: narratives, prototypes, and implementation-adjacent notes suitable for **job applications and recruiter review**. Private or employer-confidential projects are **not** mirrored here—only material that is safe to share.
+Public-facing **product and feature design** work: narratives and interactive prototypes suitable for **job applications and recruiter review**. Private or employer-confidential projects are **not** mirrored here—only material that is safe to share.
 
 ---
 
@@ -8,10 +8,9 @@ Public-facing **product and feature design** work: narratives, prototypes, and i
 
 | Project | Summary | Link |
 |--------|---------|------|
-| **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. Includes **technical stack** and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md) · [Open prototype](AI-accounting/prototype.html) |
-| **MVP implementation notes (Notion)** | Living doc for MVP scope and implementation alignment (external). | [Notion — MVP version implementation page](https://www.notion.so/MVP-version-implementation-page-34c8d41a5cff80fb855ff9f5cd4c57ca?source=copy_link) |
+| **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. Includes **technical stack** and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md) |
 
-*Add new rows above as you publish additional case studies or demos.*
+*Add new rows as you publish additional case studies or demos.*
 
 ---
 
@@ -22,9 +21,23 @@ Public-facing **product and feature design** work: narratives, prototypes, and i
 
 ---
 
-## Viewing HTML prototypes on GitHub
+## Viewing the HTML prototype (important)
 
-GitHub’s web UI does not execute full-page HTML previews from the file browser in all cases. **Recommended:** use **GitHub Pages** on this repo, or open `prototype.html` locally after clone. Details are in each project’s README.
+On GitHub, opening a file such as `AI-accounting/prototype.html` in the **Code** tab shows the **HTML source** in the browser. That is normal: GitHub is a code viewer, not a static host for arbitrary HTML execution from the blob UI.
+
+**Ways to see the real, clickable prototype:**
+
+1. **GitHub Pages (best for recruiters—one stable URL)**  
+   In the repo on GitHub: **Settings → Pages → Build and deployment → Source** → deploy from **`main`** (or your default branch) with folder **`/` (root)**. After the site is published, the prototype is typically at:
+
+   `https://YOUR_GITHUB_USERNAME.github.io/YOUR_REPO_NAME/AI-accounting/prototype.html`
+
+   Replace `YOUR_GITHUB_USERNAME` and `YOUR_REPO_NAME` with your account and repository name. Put that URL on your resume or LinkedIn.
+
+2. **Local (always works)**  
+   Clone the repo, then open `AI-accounting/prototype.html` in Chrome, Edge, Safari, or Firefox (double-click the file, or use **File → Open**). Optional: from the repo root run `python3 -m http.server` and visit `http://localhost:8000/AI-accounting/prototype.html`.
+
+More detail is in [`AI-accounting/README.md`](AI-accounting/README.md).
 
 ---
 
