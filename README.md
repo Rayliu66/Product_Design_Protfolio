@@ -8,7 +8,7 @@ Public-facing **product and feature design** work: narratives and interactive pr
 
 | Project | Summary | Links |
 |--------|---------|-------|
-| **Architect Ledger — AI Bookkeeping** | **CPA-facing AI bookkeeping** product (Next.js 15 + FastAPI + Celery + Postgres/pgvector + Redis + MinIO; n8n orchestration per v1.3 plan). This portfolio folder **only publishes** the **HTML prototype** plus screenshots—README documents the **full stack** and **private monorepo layout**. | [Open this prototype in the browser](https://rayliu66.github.io/Product_Design_Protfolio/AI-accounting/prototype.html) · [`README`](AI-accounting/README.md) |
+| **Architect Ledger — AI Bookkeeping** | **CPA-facing AI bookkeeping** product (Next.js 15 + FastAPI + Celery + Postgres/pgvector + Redis + MinIO; n8n orchestration per v1.3 plan). This portfolio folder **only publishes** the **HTML prototype** plus screenshots—README documents the **full stack** and **private monorepo layout**. | [`README`](AI-accounting/README.md) |
 
 *Add new rows as you publish additional case studies or demos.*
 
