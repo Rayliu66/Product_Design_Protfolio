@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Architect Ledger — AI Bookkeeping Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --primary:#2C3E6B;--primary-hover:#243358;--primary-light:#E8ECF4;
+  --bg:#F4F5F7;--surface:#FFFFFF;--surface-alt:#F9FAFB;
+  --text:#1A1A2E;--text-secondary:#6B7280;--text-muted:#9CA3AF;
+  --border:#E5E7EB;--border-light:#F0F1F3;
+  --success:#16A34A;--success-bg:#DCFCE7;
+  --warning:#D97706;--warning-bg:#FEF3C7;
+  --danger:#DC2626;--danger-bg:#FEE2E2;
+  --info:#2563EB;--info-bg:#DBEAFE;
+  --sidebar-w:256px;--topbar-h:64px;
+  --radius:8px;--radius-lg:12px;--radius-sm:6px;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.06);
+  --shadow-lg:0 4px 12px rgba(0,0,0,.1);
+  --shadow-xl:0 8px 24px rgba(0,0,0,.12);
+  --font:'Inter',system-ui,-apple-system,sans-serif;
+}
+html{font-size:14px}
+body{font-family:var(--font);color:var(--text);background:var(--bg);line-height:1.5;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none}
+input,select,textarea{font-family:inherit;font-size:inherit}
+table{border-collapse:collapse;width:100%}
+.hidden{display:none!important}
+
+/* ===== BUTTONS ===== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--radius);font-weight:600;font-size:.875rem;transition:all .15s ease;white-space:nowrap}
+.btn-primary{background:var(--primary);color:#fff}
+.btn-primary:hover{background:var(--primary-hover);box-shadow:var(--shadow)}
+.btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface-alt);border-color:#D1D5DB}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{background:#B91C1C}
+.btn-ghost{color:var(--text-secondary);padding:8px 12px}
+.btn-ghost:hover{background:var(--surface-alt);color:var(--text)}
+.btn-sm{padding:6px 14px;font-size:.8125rem}
+.btn-lg{padding:14px 28px;font-size:1rem}
+.btn-block{width:100%}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:var(--radius)}
+
+/* ===== BADGES ===== */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:99px;font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.badge-success{background:var(--success-bg);color:var(--success)}
+.badge-warning{background:var(--warning-bg);color:var(--warning)}
+.badge-danger{background:var(--danger-bg);color:var(--danger)}
+.badge-info{background:var(--info-bg);color:var(--info)}
+.badge-neutral{background:#F3F4F6;color:var(--text-secondary)}
+.badge-primary{background:var(--primary-light);color:var(--primary)}
+.badge-dot::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0}
+
+/* ===== FORM INPUTS ===== */
+.form-group{display:flex;flex-direction:column;gap:6px}
+.form-label{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-secondary)}
+.form-input{padding:12px 16px;border:1px solid var(--border);border-radius:var(--radius);font-size:.9375rem;color:var(--text);background:var(--surface-alt);transition:border-color .15s,box-shadow .15s;width:100%}
+.form-input:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px rgba(44,62,107,.1)}
+.form-input::placeholder{color:var(--text-muted)}
+select.form-input{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B7280' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px}
+
+/* ===== LOGIN PAGES ===== */
+.login-page{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden}
+.login-bg{position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(135deg,#E8ECF4 0%,#F4F5F7 50%,#E0E4EC 100%);clip-path:polygon(0 40%,100% 0,100% 100%,0 100%);opacity:.5}
+.login-logo{display:flex;flex-direction:column;align-items:center;gap:12px;margin-bottom:32px;position:relative;z-index:1}
+.login-logo-icon{width:48px;height:48px;background:var(--primary);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;box-shadow:var(--shadow)}
+.login-logo-icon svg{width:25px;height:25px;color:#fff}
+.login-logo-text{font-size:1.375rem;font-weight:700;color:var(--text)}
+.login-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);width:448px;max-width:90vw;position:relative;z-index:1;overflow:hidden}
+.login-card-accent{height:4px;background:var(--primary);border-radius:var(--radius-lg) var(--radius-lg) 0 0}
+.login-card-body{padding:32px}
+.login-card h2{font-size:1.5rem;font-weight:700;margin-bottom:8px}
+.login-card p{color:var(--text-secondary);margin-bottom:24px;font-size:.9375rem}
+.login-card hr{border:none;border-top:1px solid var(--border-light);margin:16px 0}
+.login-footer{display:flex;align-items:center;gap:24px;margin-top:32px;position:relative;z-index:1}
+.login-footer a{font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);transition:color .15s}
+.login-footer a:hover{color:var(--primary)}
+.login-footer-dot{width:4px;height:4px;border-radius:50%;background:var(--text-muted)}
+.code-sent-banner{display:flex;align-items:center;gap:12px;background:var(--surface-alt);border-radius:var(--radius);padding:16px;margin-bottom:24px}
+.code-sent-banner svg{color:var(--primary);flex-shrink:0}
+.code-sent-banner .label{font-size:.75rem;font-weight:700;color:var(--primary);text-transform:uppercase}
+.code-sent-banner .desc{font-size:.8125rem;color:var(--text-secondary)}
+.code-inputs{display:flex;gap:12px;margin-bottom:24px}
+.code-input{width:100%;aspect-ratio:1/1;max-width:56px;text-align:center;font-size:1.5rem;font-weight:700;border:2px solid var(--border);border-radius:var(--radius);background:var(--surface-alt);transition:border-color .15s}
+.code-input:focus{outline:none;border-color:var(--primary);background:#fff}
+.resend-row{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:.875rem;color:var(--text-secondary)}
+.resend-row a{color:var(--text-muted);font-weight:500;transition:color .15s}
+.resend-row a:hover{color:var(--primary)}
+
+/* ===== APP SHELL ===== */
+.app{display:flex;min-height:100vh}
+.sidebar{width:var(--sidebar-w);background:var(--surface);border-right:1px solid var(--border-light);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:width .3s ease;overflow:hidden}
+.sidebar.collapsed{width:68px}
+.sidebar-brand{padding:24px 24px 0}
+.sidebar.collapsed .sidebar-brand{padding:16px 8px 0;text-align:center;opacity:0;height:0;overflow:hidden;padding:0}
+.sidebar-brand h1{font-size:1.125rem;font-weight:700;color:var(--text);line-height:1.3}
+.sidebar-brand .subtitle{font-size:.75rem;color:var(--text-muted);margin-top:2px}
+.sidebar-nav{flex:1;padding:24px 12px;display:flex;flex-direction:column;gap:4px}
+.nav-link{display:flex;align-items:center;gap:14px;padding:10px 16px;border-radius:var(--radius);font-size:.9375rem;font-weight:500;color:var(--text-secondary);transition:all .15s;cursor:pointer;white-space:nowrap;overflow:hidden}
+.nav-link:hover{background:var(--surface-alt);color:var(--text)}
+.nav-link.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+.nav-link.active:hover{background:var(--primary-light)}
+.nav-link svg{width:18px;height:18px;flex-shrink:0}
+.sidebar.collapsed .sidebar-nav{padding:24px 8px}
+.sidebar.collapsed .nav-link{justify-content:center;padding:10px;gap:0;font-size:0}
+.sidebar.collapsed .nav-link svg{width:20px;height:20px}
+.sidebar-footer{padding:12px;border-top:1px solid var(--border-light);position:relative}
+.sidebar-user{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:var(--radius);cursor:pointer;transition:background .15s}
+.sidebar-user:hover{background:var(--surface-alt)}
+.sidebar-avatar{width:36px;height:36px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8125rem;font-weight:700;flex-shrink:0}
+.sidebar-user-info{flex:1;min-width:0;overflow:hidden;transition:opacity .2s}
+.sidebar-user-info .name{font-size:.8125rem;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user-info .email{font-size:.6875rem;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sidebar-user .chevron{width:16px;height:16px;color:var(--text-muted);transition:transform .2s}
+.sidebar-user.open .chevron{transform:rotate(180deg)}
+.sidebar.collapsed .sidebar-footer{padding:8px}
+.sidebar.collapsed .sidebar-user{justify-content:center;padding:8px}
+.sidebar.collapsed .sidebar-user-info{width:0;opacity:0}
+.sidebar.collapsed .sidebar-user .chevron{display:none}
+.user-popover{position:absolute;bottom:100%;left:12px;right:12px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:4px;margin-bottom:4px;display:none}
+.user-popover.show{display:block}
+.sidebar.collapsed .user-popover{left:-60px;right:auto;width:180px}
+.user-popover button{display:flex;align-items:center;gap:8px;width:100%;padding:10px 12px;border-radius:var(--radius-sm);font-size:.875rem;color:var(--danger);font-weight:500;transition:background .1s}
+.user-popover button:hover{background:var(--danger-bg)}
+.user-popover button svg{width:16px;height:16px}
+
+.main-area{flex:1;margin-left:var(--sidebar-w);display:flex;flex-direction:column;min-height:100vh;transition:margin-left .3s ease}
+.sidebar.collapsed~.main-area{margin-left:68px}
+.topbar{height:var(--topbar-h);background:var(--surface);border-bottom:1px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;padding:0 32px;position:sticky;top:0;z-index:50}
+.breadcrumb{display:flex;align-items:center;gap:6px;font-size:.9375rem}
+.breadcrumb a{color:var(--text-secondary);font-weight:500;transition:color .15s}
+.breadcrumb a:hover{color:var(--primary)}
+.breadcrumb svg{width:14px;height:14px;color:var(--text-muted)}
+.breadcrumb .current{color:var(--text);font-weight:600}
+.topbar-actions{display:flex;align-items:center;gap:8px}
+.topbar-actions .btn-icon{color:var(--text-secondary)}
+.topbar-actions .btn-icon:hover{background:var(--surface-alt);color:var(--text)}
+.topbar-avatar{width:32px;height:32px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:700;border:2px solid var(--border);margin-left:8px;cursor:pointer}
+.content{flex:1;padding:32px}
+
+/* ===== DASHBOARD ===== */
+.page-header{margin-bottom:24px}
+.page-header h2{font-size:1.5rem;font-weight:700}
+.page-header .subtitle{color:var(--text-secondary);margin-top:4px;font-size:.9375rem}
+.filter-pills{display:flex;gap:8px;margin-bottom:32px;flex-wrap:wrap}
+.filter-pill{padding:8px 20px;border-radius:99px;font-size:.875rem;font-weight:500;border:1px solid var(--border);color:var(--text-secondary);background:var(--surface);cursor:pointer;transition:all .15s}
+.filter-pill:hover{border-color:#D1D5DB;color:var(--text)}
+.filter-pill.active{background:var(--primary);color:#fff;border-color:var(--primary)}
+.card-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:48px}
+.action-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,transform .15s;cursor:pointer}
+.action-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.action-card-body{padding:24px;flex:1}
+.action-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
+.action-card-count{font-size:2.5rem;font-weight:700;color:var(--text);line-height:1}
+.action-card-title{font-size:1.125rem;font-weight:700;color:var(--text);margin-bottom:6px;line-height:1.3}
+.action-card-desc{font-size:.8125rem;color:var(--text-secondary);line-height:1.5}
+.action-card-footer{padding:0 24px 24px}
+.action-card .btn{margin-top:8px}
+.empty-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px;text-align:center;border:2px dashed var(--border)}
+.empty-card svg{width:40px;height:40px;color:var(--text-muted);margin-bottom:12px}
+.empty-card p{color:var(--text-muted);font-size:.875rem;margin-bottom:8px}
+.empty-card a{color:var(--primary);font-size:.875rem;font-weight:500}
+.empty-card a:hover{text-decoration:underline}
+
+.insight-section{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:32px;margin-bottom:32px}
+.insight-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:24px}
+.insight-header h3{font-size:1.125rem;font-weight:700}
+.insight-header .subtitle{color:var(--text-secondary);font-size:.875rem;margin-top:2px}
+.kpi-cards{display:flex;gap:16px}
+.kpi-card{background:var(--surface-alt);border-radius:var(--radius);padding:8px 16px}
+.kpi-card .label{font-size:.75rem;color:var(--text-muted)}
+.kpi-card .value{font-size:1.25rem;font-weight:700;color:var(--text)}
+
+/* ===== DATA TABLES ===== */
+.table-wrapper{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);overflow:hidden}
+.table-header{display:flex;justify-content:space-between;align-items:center;padding:24px;border-bottom:1px solid var(--border-light)}
+.table-header h2{font-size:1.25rem;font-weight:700}
+.table-header .subtitle{font-size:.875rem;color:var(--text-secondary);margin-top:2px}
+.table-actions{display:flex;gap:8px;align-items:center}
+.search-input{position:relative}
+.search-input input{padding:8px 12px 8px 36px;border:1px solid var(--border);border-radius:var(--radius);font-size:.875rem;width:240px;background:var(--surface);transition:border-color .15s}
+.search-input input:focus{outline:none;border-color:var(--primary)}
+.search-input svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--text-muted)}
+.filter-bar{display:flex;gap:16px;padding:24px;background:var(--surface-alt);border-bottom:1px solid var(--border-light)}
+.filter-bar .form-group{min-width:200px}
+.data-table th{padding:12px 16px;text-align:left;font-size:.6875rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);background:var(--surface);border-bottom:1px solid var(--border-light);cursor:pointer;user-select:none;white-space:nowrap}
+.data-table th:hover{color:var(--text)}
+.data-table th svg{width:12px;height:12px;vertical-align:middle;margin-left:4px}
+.data-table td{padding:14px 16px;border-bottom:1px solid var(--border-light);font-size:.875rem;color:var(--text);vertical-align:middle}
+.data-table tbody tr{transition:background .1s;cursor:pointer}
+.data-table tbody tr:hover{background:var(--surface-alt)}
+.data-table tbody tr:last-child td{border-bottom:none}
+.table-pagination{display:flex;justify-content:space-between;align-items:center;padding:16px 24px;font-size:.8125rem;color:var(--text-secondary);border-top:1px solid var(--border-light)}
+.client-cell{display:flex;align-items:center;gap:10px}
+.client-avatar{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.6875rem;font-weight:700;color:#fff;flex-shrink:0}
+.phase-badge{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;font-size:.75rem;font-weight:700;background:var(--primary-light);color:var(--primary)}
+
+/* ===== WORKFLOW DETAIL ===== */
+.workflow-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.workflow-header h2{font-size:1.5rem;font-weight:700}
+.phase-progress{display:flex;align-items:flex-start;justify-content:space-between;position:relative;padding:0 24px;margin-bottom:40px}
+.phase-progress::before{content:'';position:absolute;top:20px;left:60px;right:60px;height:2px;background:var(--border)}
+.phase-progress-fill{position:absolute;top:20px;left:60px;height:2px;background:var(--primary);transition:width .3s}
+.phase-node{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;z-index:1;cursor:pointer}
+.phase-circle{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.875rem;font-weight:700;transition:all .2s}
+.phase-circle.completed{background:var(--primary);color:#fff;box-shadow:0 2px 8px rgba(44,62,107,.3)}
+.phase-circle.completed svg{width:16px;height:16px}
+.phase-circle.active{background:var(--surface);color:var(--primary);border:3px solid var(--primary);box-shadow:0 2px 8px rgba(44,62,107,.2)}
+.phase-circle.pending{background:var(--surface-alt);color:var(--text-muted);border:2px solid var(--border)}
+.phase-label{font-size:.6875rem;font-weight:500;color:var(--text-secondary);text-align:center;max-width:80px}
+.phase-status{font-size:.5625rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted)}
+.phase-node.active .phase-status{color:var(--primary)}
+.phase-node.completed .phase-status{color:var(--success)}
+
+.phase-panel{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);margin-bottom:12px;overflow:hidden}
+.phase-panel-header{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;cursor:pointer;transition:background .1s}
+.phase-panel-header:hover{background:var(--surface-alt)}
+.phase-panel-left{display:flex;align-items:center;gap:16px}
+.phase-icon{width:34px;height:34px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.phase-icon.completed{background:var(--success-bg);color:var(--success)}
+.phase-icon.active{background:var(--primary-light);color:var(--primary)}
+.phase-icon.pending{background:#F3F4F6;color:var(--text-muted)}
+.phase-icon svg{width:18px;height:18px}
+.phase-panel-info h3{font-size:1rem;font-weight:600}
+.phase-panel-info .meta{font-size:.8125rem;color:var(--text-secondary);margin-top:2px}
+.phase-panel-header .chevron{width:20px;height:20px;color:var(--text-muted);transition:transform .2s}
+.phase-panel.expanded .chevron{transform:rotate(180deg)}
+.phase-panel-content{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.phase-panel.expanded .phase-panel-content{max-height:600px}
+.phase-panel.locked{opacity:.5;pointer-events:none}
+
+.task-list{padding:0 24px 24px}
+.progress-bar-mini{display:flex;align-items:center;gap:8px;padding:0 24px 16px}
+.progress-bar-mini .bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-bar-mini .fill{height:100%;background:var(--primary);border-radius:3px;transition:width .3s}
+.progress-bar-mini .label{font-size:.75rem;color:var(--text-secondary);white-space:nowrap}
+
+.task-row{display:flex;align-items:center;padding:16px;border-radius:var(--radius);transition:background .1s;gap:16px}
+.task-row:hover{background:var(--surface-alt)}
+.task-row.human{cursor:pointer}
+.task-row.human.highlighted{background:var(--primary-light);border:1px solid rgba(44,62,107,.15)}
+.task-icon{width:40px;height:40px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.task-icon.agent{background:var(--surface-alt);color:var(--text-secondary)}
+.task-icon.human{background:var(--warning-bg);color:var(--warning)}
+.task-info{flex:1;min-width:0}
+.task-info h4{font-size:.9375rem;font-weight:600;display:flex;align-items:center;gap:8px}
+.task-info p{font-size:.8125rem;color:var(--text-secondary);margin-top:2px}
+.task-meta{display:flex;align-items:center;gap:12px;flex-shrink:0}
+.task-meta .time{font-size:.75rem;color:var(--text-muted)}
+
+/* ===== HITL PANEL ===== */
+.panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:200;opacity:0;pointer-events:none;transition:opacity .3s}
+.panel-overlay.show{opacity:1;pointer-events:auto}
+.slide-panel{position:fixed;top:0;right:0;bottom:0;width:520px;max-width:90vw;background:var(--surface);box-shadow:var(--shadow-xl);z-index:201;transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column}
+.slide-panel.show{transform:translateX(0)}
+.panel-header{display:flex;justify-content:space-between;align-items:flex-start;padding:24px;border-bottom:1px solid var(--border-light)}
+.panel-header h3{font-size:1.125rem;font-weight:700}
+.panel-header .meta{font-size:.8125rem;color:var(--text-secondary);margin-top:4px}
+.panel-close{width:32px;height:32px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--text-secondary);transition:all .15s;flex-shrink:0}
+.panel-close:hover{background:var(--surface-alt);color:var(--text)}
+.panel-close svg{width:20px;height:20px}
+.panel-body{flex:1;overflow-y:auto;padding:24px}
+.panel-section{margin-bottom:24px}
+.panel-section-title{font-size:.6875rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text-muted);margin-bottom:12px}
+.agent-output{background:var(--surface-alt);border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.agent-output p{font-size:.875rem;color:var(--text-secondary)}
+.file-item{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface-alt);border-radius:var(--radius);margin-top:8px}
+.file-item svg{width:18px;height:18px;color:var(--primary);flex-shrink:0}
+.file-item .file-info{flex:1}
+.file-item .file-name{font-size:.875rem;font-weight:500}
+.file-item .file-size{font-size:.75rem;color:var(--text-muted)}
+.file-item .download-btn{color:var(--primary);font-size:.8125rem;font-weight:500;cursor:pointer}
+.file-item .download-btn:hover{text-decoration:underline}
+.action-steps{list-style:none;counter-reset:steps}
+.action-steps li{counter-increment:steps;display:flex;gap:12px;padding:8px 0;font-size:.875rem;color:var(--text-secondary)}
+.action-steps li::before{content:counter(steps);width:24px;height:24px;border-radius:50%;background:var(--primary-light);color:var(--primary);display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.upload-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:32px;text-align:center;transition:all .2s;cursor:pointer}
+.upload-zone:hover,.upload-zone.dragover{border-color:var(--primary);background:var(--primary-light)}
+.upload-zone svg{width:32px;height:32px;color:var(--text-muted);margin-bottom:8px}
+.upload-zone p{font-size:.875rem;color:var(--text-secondary)}
+.upload-zone .browse{color:var(--primary);font-weight:500}
+.uploaded-files{margin-top:12px}
+.uploaded-file{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--success-bg);border-radius:var(--radius);margin-top:6px;font-size:.8125rem}
+.uploaded-file svg{width:14px;height:14px;color:var(--success)}
+.uploaded-file .remove{margin-left:auto;color:var(--text-muted);cursor:pointer;font-size:.75rem}
+.uploaded-file .remove:hover{color:var(--danger)}
+.panel-footer{padding:16px 24px;border-top:1px solid var(--border-light);display:flex;gap:12px}
+
+/* ===== CLIENT DETAIL ===== */
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border-light);margin-bottom:24px}
+.tab{padding:12px 24px;font-size:.9375rem;font-weight:500;color:var(--text-secondary);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-color:var(--primary);font-weight:600}
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.detail-card{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px}
+.detail-card h3{font-size:1rem;font-weight:700;margin-bottom:16px}
+.detail-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border-light)}
+.detail-row:last-child{border-bottom:none}
+.detail-row .label{font-size:.8125rem;color:var(--text-secondary)}
+.detail-row .value{font-size:.8125rem;font-weight:500}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:8px}
+.stat-item{background:var(--surface-alt);border-radius:var(--radius);padding:16px;text-align:center}
+.stat-item .value{font-size:1.5rem;font-weight:700;color:var(--primary)}
+.stat-item .label{font-size:.75rem;color:var(--text-secondary);margin-top:4px}
+
+/* ===== SETTINGS ===== */
+.settings-section{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:24px;margin-bottom:24px}
+.settings-section h3{font-size:1.125rem;font-weight:700;margin-bottom:4px}
+.settings-section .desc{font-size:.875rem;color:var(--text-secondary);margin-bottom:20px}
+.settings-form{max-width:400px}
+.settings-form .form-group{margin-bottom:16px}
+
+/* ===== MODALS ===== */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:300;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.modal-overlay.show{opacity:1;pointer-events:auto}
+.modal{background:var(--surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-xl);width:440px;max-width:90vw;transform:scale(.95);transition:transform .2s}
+.modal-overlay.show .modal{transform:scale(1)}
+.modal-header{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border-light)}
+.modal-header h3{font-size:1.0625rem;font-weight:700}
+.modal-body{padding:24px}
+.modal-footer{display:flex;justify-content:flex-end;gap:8px;padding:16px 24px;border-top:1px solid var(--border-light)}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;top:24px;right:24px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);padding:14px 20px;display:flex;align-items:center;gap:10px;z-index:999;transform:translateX(120%);transition:transform .3s ease;font-size:.875rem;font-weight:500}
+.toast.show{transform:translateX(0)}
+.toast svg{width:18px;height:18px;flex-shrink:0}
+.toast.success svg{color:var(--success)}
+.toast.error svg{color:var(--danger)}
+
+/* ===== FAB ===== */
+.fab{position:fixed;bottom:32px;right:32px;z-index:50}
+
+/* ===== MISC ===== */
+.text-muted{color:var(--text-secondary)}
+.text-sm{font-size:.8125rem}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:16px}.mt-4{margin-top:24px}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:16px}.mb-4{margin-bottom:24px}
+.gap-2{gap:8px}.gap-3{gap:16px}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}
+.full-span{grid-column:1/-1}
+
+@media(max-width:1024px){
+  .card-grid{grid-template-columns:repeat(2,1fr)}
+  .detail-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%)}
+  .main-area{margin-left:0}
+  .card-grid{grid-template-columns:1fr}
+  .slide-panel{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== LOGIN: EMAIL ==================== -->
+<section id="page-login" class="login-page">
+  <div class="login-bg"></div>
+  <div class="login-logo">
+    <div class="login-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+    </div>
+    <div class="login-logo-text">Architect Ledger</div>
+  </div>
+  <div class="login-card">
+    <div class="login-card-accent"></div>
+    <div class="login-card-body">
+      <h2>Sign in to Architect Ledger</h2>
+      <p>Enter your professional email to receive a secure access code.</p>
+      <div class="form-group mb-4">
+        <label class="form-label">Email address</label>
+        <div style="position:relative">
+          <input type="email" class="form-input" placeholder="name@firm.com" id="login-email" style="padding-right:44px">
+          <svg style="position:absolute;right:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--text-muted)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="navigateTo('verify')">
+        Send verification code
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="login-footer">
+    <a href="#">Security Policy</a>
+    <div class="login-footer-dot"></div>
+    <a href="#">Technical Support</a>
+    <div class="login-footer-dot"></div>
+    <a href="#">Institutional Terms</a>
+  </div>
+</section>
+
+<!-- ==================== LOGIN: VERIFY ==================== -->
+<section id="page-verify" class="login-page hidden">
+  <div class="login-bg"></div>
+  <div class="login-logo">
+    <div class="login-logo-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/><path d="M9 9v.01"/><path d="M9 12v.01"/><path d="M9 15v.01"/><path d="M9 18v.01"/></svg>
+    </div>
+    <div class="login-logo-text">Architect Ledger</div>
+  </div>
+  <div class="login-card">
+    <div class="login-card-accent"></div>
+    <div class="login-card-body">
+      <h2>Sign in to Architect Ledger</h2>
+      <hr>
+      <div class="code-sent-banner">
+        <svg width="21" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+        <div>
+          <div class="label">Code Sent</div>
+          <div class="desc">We sent a 6-digit code to your inbox.</div>
+        </div>
+      </div>
+      <div class="form-group mb-4">
+        <label class="form-label">Verification Code</label>
+        <div class="code-inputs">
+          <input type="text" maxlength="1" class="code-input" autofocus>
+          <input type="text" maxlength="1" class="code-input">
+          <input type="text" maxlength="1" class="code-input">
+          <input type="text" maxlength="1" class="code-input">
+          <input type="text" maxlength="1" class="code-input">
+          <input type="text" maxlength="1" class="code-input">
+        </div>
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="navigateTo('dashboard')">Verify Identity</button>
+      <div class="resend-row">
+        <span>Didn't receive it?</span>
+        <span><span id="timer">0:59</span>&nbsp;&nbsp;<a href="#" onclick="return false">Resend code</a></span>
+      </div>
+    </div>
+  </div>
+  <div class="login-footer">
+    <a href="#">Security Policy</a>
+    <div class="login-footer-dot"></div>
+    <a href="#">Technical Support</a>
+    <div class="login-footer-dot"></div>
+    <a href="#">Institutional Terms</a>
+  </div>
+</section>
+
+<!-- ==================== APP SHELL ==================== -->
+<div id="app-shell" class="app hidden">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      <h1>Architect Ledger</h1>
+      <div class="subtitle">Accounting Solutions</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-link active" data-page="dashboard" onclick="navigateTo('dashboard')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-link" data-page="tasks" onclick="navigateTo('tasks')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1Z"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+        Tasks
+      </div>
+      <div class="nav-link" data-page="clients" onclick="navigateTo('clients')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clients
+      </div>
+      <div class="nav-link" data-page="settings" onclick="navigateTo('settings')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+        Settings
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="user-popover" id="user-popover">
+        <button onclick="navigateTo('login');document.getElementById('user-popover').classList.remove('show')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          Log out
+        </button>
+      </div>
+      <div class="sidebar-user" onclick="document.getElementById('user-popover').classList.toggle('show');this.classList.toggle('open')">
+        <div class="sidebar-avatar">AC</div>
+        <div class="sidebar-user-info">
+          <div class="name">Arthur Chen</div>
+          <div class="email">arthur@architectledger.com</div>
+        </div>
+        <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN AREA -->
+  <div class="main-area">
+    <header class="topbar">
+      <div class="breadcrumb" id="breadcrumb"></div>
+      <div class="topbar-actions">
+        <button class="btn-icon" onclick="toggleSidebar()" title="Toggle sidebar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg></button>
+        <button class="btn-icon" title="Notifications"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg></button>
+        <button class="btn-icon" title="Search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <div class="topbar-avatar" onclick="navigateTo('settings')">AC</div>
+      </div>
+    </header>
+
+    <!-- ========== DASHBOARD ========== -->
+    <div class="content" id="page-dashboard">
+      <div class="page-header">
+        <h2>Your action items</h2>
+        <p class="subtitle">Welcome back, Arthur. 12 critical items require your manual intervention today.</p>
+      </div>
+      <div class="filter-pills">
+        <button class="filter-pill active" onclick="filterDashboard(this,'all')">All (12)</button>
+        <button class="filter-pill" onclick="filterDashboard(this,'important')">Important (8)</button>
+        <button class="filter-pill" onclick="filterDashboard(this,'yearend')">Year-End (2)</button>
+        <button class="filter-pill" onclick="filterDashboard(this,'discrepancies')">Discrepancies (1)</button>
+        <button class="filter-pill" onclick="filterDashboard(this,'onboarding')">Onboarding (1)</button>
+        <button class="filter-pill" onclick="filterDashboard(this,'audit')">Audit (1)</button>
+      </div>
+      <div class="card-grid">
+        <div class="action-card" data-category="important" onclick="navigateTo('tasks')">
+          <div class="action-card-body">
+            <div class="action-card-top">
+              <div class="action-card-count">14</div>
+              <span class="badge badge-danger badge-dot">Important</span>
+            </div>
+            <div class="action-card-title">Balance sheets awaiting review</div>
+            <div class="action-card-desc">Review AI-generated balance sheets for 14 clients. Flagging required for outliers in operational expenses.</div>
+          </div>
+          <div class="action-card-footer"><button class="btn btn-primary btn-block">Review</button></div>
+        </div>
+        <div class="action-card" data-category="yearend" onclick="navigateTo('tasks')">
+          <div class="action-card-body">
+            <div class="action-card-top">
+              <div class="action-card-count">03</div>
+              <span class="badge badge-warning badge-dot">Year-End</span>
+            </div>
+            <div class="action-card-title">Year-End Close-out</div>
+            <div class="action-card-desc">Final certification required for VentureCorp, Solstice Labs, and Peak Consulting tax filings.</div>
+          </div>
+          <div class="action-card-footer"><button class="btn btn-primary btn-block">Begin Review</button></div>
+        </div>
+        <div class="action-card" data-category="discrepancies" onclick="navigateTo('tasks')">
+          <div class="action-card-body">
+            <div class="action-card-top">
+              <div class="action-card-count">08</div>
+              <span class="badge badge-danger badge-dot">Critical</span>
+            </div>
+            <div class="action-card-title">Unmatched Transactions</div>
+            <div class="action-card-desc">System identified 8 transactions that don't match provided merchant categories in Bank Feed #402.</div>
+          </div>
+          <div class="action-card-footer"><button class="btn btn-primary btn-block">Resolve Issues</button></div>
+        </div>
+        <div class="action-card" data-category="onboarding" onclick="navigateTo('tasks')">
+          <div class="action-card-body">
+            <div class="action-card-top">
+              <div class="action-card-count">02</div>
+              <span class="badge badge-info badge-dot">Medium</span>
+            </div>
+            <div class="action-card-title">New Client Onboarding</div>
+            <div class="action-card-desc">Incomplete documentation for 'Skyline Real Estate'. Missing EIN and 2023 profit/loss history.</div>
+          </div>
+          <div class="action-card-footer"><button class="btn btn-primary btn-block">Start Onboarding</button></div>
+        </div>
+        <div class="action-card" data-category="audit" onclick="navigateTo('tasks')">
+          <div class="action-card-body">
+            <div class="action-card-top">
+              <div class="action-card-count">01</div>
+              <span class="badge badge-warning badge-dot">Attention</span>
+            </div>
+            <div class="action-card-title">Audit Log Anomaly</div>
+            <div class="action-card-desc">Multiple failed login attempts detected on 'Apex Trading' sub-ledger. Review security logs.</div>
+          </div>
+          <div class="action-card-footer"><button class="btn btn-primary btn-block">Investigate Logs</button></div>
+        </div>
+        <div class="empty-card" data-category="all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <p>No additional items pending.</p>
+          <a href="#" onclick="navigateTo('clients');return false">View all clients →</a>
+        </div>
+      </div>
+
+      <div class="insight-section">
+        <div class="insight-header">
+          <div>
+            <h3>Efficiency Metrics</h3>
+            <div class="subtitle">Automated analysis across all active engagements</div>
+          </div>
+          <div class="kpi-cards">
+            <div class="kpi-card"><div class="label">Completion Rate</div><div class="value">68.2%</div></div>
+            <div class="kpi-card"><div class="label">AI Accuracy</div><div class="value">11 Days</div></div>
+          </div>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Client</th><th style="text-align:right">Engagement</th><th style="text-align:right">Status</th><th style="text-align:right">Action</th></tr></thead>
+          <tbody>
+            <tr onclick="navigateTo('workflow-detail')">
+              <td><div class="client-cell"><div class="client-avatar" style="background:#6366F1">NC</div> NorthStar Collective</div></td>
+              <td style="text-align:right">Fiscal Audit 2024</td>
+              <td style="text-align:right"><span class="badge badge-success badge-dot">Active</span></td>
+              <td style="text-align:right"><svg width="7" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></td>
+            </tr>
+            <tr onclick="navigateTo('workflow-detail')">
+              <td><div class="client-cell"><div class="client-avatar" style="background:#EC4899">SL</div> Solstice Labs</div></td>
+              <td style="text-align:right">Q3 2026</td>
+              <td style="text-align:right"><span class="badge badge-warning badge-dot">Pending Review</span></td>
+              <td style="text-align:right"><svg width="7" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ========== TASKS TABLE ========== -->
+    <div class="content hidden" id="page-tasks">
+      <div class="flex justify-between items-center mb-4">
+        <div>
+          <h2 style="font-size:1.5rem;font-weight:700">Workflow Log</h2>
+          <p class="text-muted text-sm mt-1">Track client setup and recurring bookkeeping workflows across all clients.</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Export CSV</button>
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('clients-new')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Engagement</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <div class="filter-bar">
+          <div class="form-group"><label class="form-label">Workflow</label><select class="form-input"><option>All Workflows</option><option>Client Setup</option><option>Bookkeeping</option></select></div>
+          <div class="form-group"><label class="form-label">Category</label><select class="form-input"><option>All Categories</option><option>Balance Sheet Review</option><option>Year-End Close</option><option>Transaction Matching</option></select></div>
+          <div class="form-group"><label class="form-label">Phase</label><select class="form-input"><option>All</option><option>Phase 1 - Onboarding</option><option>Phase 2 - Platform Setup</option><option>Phase 3 - Bank Statements</option><option>Phase 4 - Transaction Processing</option><option>Phase 5 - Year-End</option></select></div>
+          <div class="form-group"><label class="form-label">Status</label><select class="form-input"><option>Active</option><option>All</option><option>Blocked</option><option>Complete</option></select></div>
+        </div>
+        <table class="data-table">
+          <thead><tr>
+            <th>Client <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/><path d="m7 9 5-5 5 5"/></svg></th>
+            <th>Workflow</th>
+            <th>Period</th>
+            <th>Phase</th>
+            <th>Status</th>
+            <th>Pending Actions</th>
+            <th>Last Activity <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m7 15 5 5 5-5"/></svg></th>
+          </tr></thead>
+          <tbody>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#6366F1">NC</div>NorthStar Collective</div></td><td><span class="badge badge-info">Client Setup</span></td><td>—</td><td><span class="phase-badge">2</span></td><td><span class="badge badge-success">Active</span></td><td>3</td><td>2 hours ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#8B5CF6">SR</div>Skyline Real Estate</div></td><td><span class="badge badge-info">Client Setup</span></td><td>—</td><td><span class="phase-badge">1</span></td><td><span class="badge badge-warning">Blocked</span></td><td>4</td><td>3 days ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#EF4444">AT</div>Apex Trading</div></td><td><span class="badge badge-info">Client Setup</span></td><td>—</td><td><span class="phase-badge">2</span></td><td><span class="badge badge-success">Active</span></td><td>1</td><td>4 days ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#EC4899">SL</div>Solstice Labs</div></td><td><span class="badge badge-primary">Bookkeeping</span></td><td>Q3 2026</td><td><span class="phase-badge">4</span></td><td><span class="badge badge-warning">Blocked</span></td><td>1</td><td>5 hours ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#F59E0B">VC</div>VentureCorp</div></td><td><span class="badge badge-primary">Bookkeeping</span></td><td>FY 2025</td><td><span class="phase-badge">5</span></td><td><span class="badge badge-success">Active</span></td><td>2</td><td>1 day ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#10B981">PC</div>Peak Consulting</div></td><td><span class="badge badge-primary">Bookkeeping</span></td><td>Q4 2025</td><td><span class="phase-badge">3</span></td><td><span class="badge badge-success">Active</span></td><td>0</td><td>2 days ago</td></tr>
+            <tr onclick="navigateTo('workflow-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#3B82F6">MG</div>Meridian Group</div></td><td><span class="badge badge-primary">Bookkeeping</span></td><td>FY 2025</td><td><span class="phase-badge">5</span></td><td><span class="badge badge-neutral">Complete</span></td><td>0</td><td>1 week ago</td></tr>
+          </tbody>
+        </table>
+        <div class="table-pagination">
+          <span>Showing 1–7 of 7 engagements</span>
+          <span>Page 1 of 1</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== WORKFLOW DETAIL ========== -->
+    <div class="content hidden" id="page-workflow-detail">
+      <div class="workflow-header mb-4">
+        <div>
+          <div class="flex items-center gap-2" style="gap:12px">
+            <h2>NorthStar Collective</h2>
+            <span class="badge badge-info" style="font-size:.75rem">Client Setup</span>
+          </div>
+          <p class="text-muted text-sm mt-1">One-time setup — started Jan 15, 2024</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+        </div>
+      </div>
+
+      <div class="phase-progress" style="max-width:480px;margin-left:auto;margin-right:auto">
+        <div class="phase-progress-fill" style="width:50%"></div>
+        <div class="phase-node completed"><div class="phase-circle completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><div class="phase-label">Onboarding</div><div class="phase-status">Completed</div></div>
+        <div class="phase-node active"><div class="phase-circle active">2</div><div class="phase-label">Platform Setup</div><div class="phase-status">Active Now</div></div>
+      </div>
+
+      <!-- Phase 1 - Collapsed -->
+      <div class="phase-panel" onclick="togglePhase(this)">
+        <div class="phase-panel-header">
+          <div class="phase-panel-left">
+            <div class="phase-icon completed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="phase-panel-info"><h3>Phase 1: Onboarding</h3><div class="meta">Completed on Feb 2, 2024</div></div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="phase-panel-content"><div class="task-list">
+          <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="task-info"><h4>Document Request Email</h4><p>Sent engagement letter, CRA authorization form to client</p></div><div class="task-meta"><span class="badge badge-success">Done</span></div></div>
+          <div class="task-row"><div class="task-icon human"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div><div class="task-info"><h4>Client Document Submission</h4><p>Received engagement letter, CRA authorization, prior returns</p></div><div class="task-meta"><span class="badge badge-success">Done</span></div></div>
+          <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="task-info"><h4>Document Validation</h4><p>All required documents verified and complete</p></div><div class="task-meta"><span class="badge badge-success">Done</span></div></div>
+        </div></div>
+      </div>
+
+      <!-- Phase 2 - Expanded -->
+      <div class="phase-panel expanded">
+        <div class="phase-panel-header" onclick="togglePhase(this.parentElement)">
+          <div class="phase-panel-left">
+            <div class="phase-icon active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div>
+            <div class="phase-panel-info">
+              <h3>Phase 2: Platform Setup <span class="badge badge-primary" style="margin-left:8px">Current Phase</span></h3>
+              <div class="meta">Configure Xero, CRA access, and platform integrations</div>
+            </div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="phase-panel-content">
+          <div class="progress-bar-mini"><div class="bar"><div class="fill" style="width:40%"></div></div><div class="label">2 of 5 tasks complete</div></div>
+          <div class="task-list">
+            <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="task-info"><h4>Prepare Xero Setup Instructions</h4><p>Generated setup checklist for Xero organization</p></div><div class="task-meta"><span class="time">1d ago</span><span class="badge badge-success">Done</span></div></div>
+            <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="task-info"><h4>Prepare CRA Checklist</h4><p>Generated CRA My Business Account setup steps</p></div><div class="task-meta"><span class="time">1d ago</span><span class="badge badge-success">Done</span></div></div>
+            <div class="task-row human highlighted" onclick="openHITLPanel()"><div class="task-icon human"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div><div class="task-info"><h4>Configure Xero Organization <span class="badge badge-warning">Requires Human Action</span></h4><p>Set up chart of accounts, bank feeds, and API access in Xero following the generated checklist.</p></div><div class="task-meta"><span class="time">Now</span><button class="btn btn-primary btn-sm">Begin Setup</button></div></div>
+            <div class="task-row"><div class="task-icon human"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/></svg></div><div class="task-info"><h4>Configure CRA Access</h4><p>Set up CRA My Business Account and authorize access</p></div><div class="task-meta"><span class="badge badge-neutral">Pending</span></div></div>
+            <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="task-info"><h4>Capture Platform Config</h4><p>Validate and store integration credentials</p></div><div class="task-meta"><span class="badge badge-neutral">Pending</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div style="background:var(--surface-alt);border:2px dashed var(--border);border-radius:var(--radius-lg);padding:32px;text-align:center;margin-top:12px">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="1.5" style="margin-bottom:8px"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        <p style="font-size:.9375rem;font-weight:600;color:var(--text);margin-bottom:4px">Once setup is complete, this client will be <strong>Ready</strong></p>
+        <p style="font-size:.8125rem;color:var(--text-secondary)">The recurring Bookkeeping workflow (Phase 3–5) will become available for quarterly and annual processing.</p>
+      </div>
+
+      <div class="fab">
+        <button class="btn btn-primary" style="box-shadow:var(--shadow-lg);padding:14px 24px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All Reports</button>
+      </div>
+    </div>
+
+    <!-- ========== BOOKKEEPING WORKFLOW DETAIL ========== -->
+    <div class="content hidden" id="page-bookkeeping-detail">
+      <div class="workflow-header mb-4">
+        <div>
+          <div class="flex items-center gap-2" style="gap:12px">
+            <h2>NorthStar Collective — Fiscal Audit 2024</h2>
+            <span class="badge badge-primary" style="font-size:.75rem">Bookkeeping</span>
+          </div>
+          <p class="text-muted text-sm mt-1">Recurring quarterly workflow · Engagement started Jan 15, 2024</p>
+        </div>
+        <div class="flex gap-2">
+          <button class="btn btn-secondary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg></button>
+        </div>
+      </div>
+
+      <div class="phase-progress">
+        <div class="phase-progress-fill" style="width:18%"></div>
+        <div class="phase-node active"><div class="phase-circle active">1</div><div class="phase-label">Bank Statements</div><div class="phase-status">Active Now</div></div>
+        <div class="phase-node"><div class="phase-circle pending">2</div><div class="phase-label">Transaction Processing</div><div class="phase-status">Pending</div></div>
+        <div class="phase-node"><div class="phase-circle pending">3</div><div class="phase-label">Year-End</div><div class="phase-status">Pending</div></div>
+      </div>
+
+      <!-- Phase 3 - Expanded -->
+      <div class="phase-panel expanded">
+        <div class="phase-panel-header" onclick="togglePhase(this.parentElement)">
+          <div class="phase-panel-left">
+            <div class="phase-icon active"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+            <div class="phase-panel-info">
+              <h3>Phase 3: Bank Statements <span class="badge badge-primary" style="margin-left:8px">Current Phase</span></h3>
+              <div class="meta">Collect and validate bank statements for the period</div>
+            </div>
+          </div>
+          <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="phase-panel-content">
+          <div class="progress-bar-mini"><div class="bar"><div class="fill" style="width:33%"></div></div><div class="label">1 of 3 tasks complete</div></div>
+          <div class="task-list">
+            <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg></div><div class="task-info"><h4>Import Ledger Data</h4><p>Bulk upload from primary ERP system</p></div><div class="task-meta"><span class="time">2h ago</span><span class="badge badge-success">Done</span></div></div>
+            <div class="task-row human highlighted" onclick="openBookkeepingHITLPanel()"><div class="task-icon human"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="task-info"><h4>Verify Receipt Mappings <span class="badge badge-warning">Requires Human Action</span></h4><p>Cross-reference physical receipts with flagged ledger discrepancies for client audit trail.</p></div><div class="task-meta"><span class="time">Now</span><button class="btn btn-primary btn-sm">Begin Review</button></div></div>
+            <div class="task-row"><div class="task-icon agent"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg></div><div class="task-info"><h4>Ratio Analysis</h4><p>Generating liquidity and solvency reports</p></div><div class="task-meta"><span class="badge badge-neutral">Pending</span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Phase 4 - Locked -->
+      <div class="phase-panel locked"><div class="phase-panel-header"><div class="phase-panel-left"><div class="phase-icon pending"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="phase-panel-info"><h3>Phase 4: Transaction Processing</h3><div class="meta">Locked — requires Phase 3 completion</div></div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg></div></div>
+
+      <!-- Phase 5 - Locked -->
+      <div class="phase-panel locked"><div class="phase-panel-header"><div class="phase-panel-left"><div class="phase-icon pending"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="phase-panel-info"><h3>Phase 5: Year-End</h3><div class="meta">Locked — requires Phase 4 completion</div></div></div><svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="transform:rotate(-90deg)"><polyline points="6 9 12 15 18 9"/></svg></div></div>
+
+      <div class="fab">
+        <button class="btn btn-primary" style="box-shadow:var(--shadow-lg);padding:14px 24px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Download All Reports</button>
+      </div>
+    </div>
+
+    <!-- ========== CLIENTS TABLE ========== -->
+    <div class="content hidden" id="page-clients">
+      <div class="flex justify-between items-center mb-4">
+        <div><h2 style="font-size:1.5rem;font-weight:700">Client Accounts</h2><p class="text-muted text-sm mt-1">Manage all client entities and their engagements.</p></div>
+        <div class="flex gap-2">
+          <div class="search-input"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg><input type="text" placeholder="Search clients..."></div>
+          <button class="btn btn-primary btn-sm" onclick="navigateTo('clients-new')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> New Client</button>
+        </div>
+      </div>
+      <div class="table-wrapper">
+        <table class="data-table">
+          <thead><tr><th>Client Name</th><th>Entity Type</th><th>Onboarding Status</th><th>Active Workflow</th><th>Status</th><th>Last Updated</th></tr></thead>
+          <tbody>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#6366F1">NC</div>NorthStar Collective</div></td><td>Corporation</td><td><span class="badge badge-warning badge-dot">Pending</span></td><td><span class="badge badge-neutral">Not Started</span></td><td><span class="badge badge-success">Active</span></td><td>2 hours ago</td></tr>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#EC4899">SL</div>Solstice Labs</div></td><td>Corporation</td><td><span class="badge badge-success badge-dot">Ready</span></td><td><span class="badge badge-primary">Q3 2026</span></td><td><span class="badge badge-warning">Blocked</span></td><td>5 hours ago</td></tr>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#F59E0B">VC</div>VentureCorp</div></td><td>Partnership</td><td><span class="badge badge-success badge-dot">Ready</span></td><td><span class="badge badge-primary">FY 2025</span></td><td><span class="badge badge-success">Active</span></td><td>1 day ago</td></tr>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#10B981">PC</div>Peak Consulting</div></td><td>Sole Proprietor</td><td><span class="badge badge-success badge-dot">Ready</span></td><td><span class="badge badge-primary">Q4 2025</span></td><td><span class="badge badge-success">Active</span></td><td>2 days ago</td></tr>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#8B5CF6">SR</div>Skyline Real Estate</div></td><td>Corporation</td><td><span class="badge badge-danger badge-dot">Onboarding</span></td><td><span class="badge badge-neutral">Not Started</span></td><td><span class="badge badge-warning">Blocked</span></td><td>3 days ago</td></tr>
+            <tr onclick="navigateTo('client-detail')"><td><div class="client-cell"><div class="client-avatar" style="background:#EF4444">AT</div>Apex Trading</div></td><td>Partnership</td><td><span class="badge badge-warning badge-dot">Pending</span></td><td><span class="badge badge-neutral">Not Started</span></td><td><span class="badge badge-success">Active</span></td><td>4 days ago</td></tr>
+          </tbody>
+        </table>
+        <div class="table-pagination"><span>Showing 1–6 of 6 clients</span><span>Page 1 of 1</span></div>
+      </div>
+    </div>
+
+    <!-- ========== NEW CLIENT FORM ========== -->
+    <div class="content hidden" id="page-clients-new" style="display:flex;justify-content:center">
+      <div style="width:520px;max-width:100%">
+        <div class="login-card" style="width:100%;max-width:100%">
+          <div class="login-card-accent"></div>
+          <div class="login-card-body">
+            <h2>Create New Client</h2>
+            <p>Fill in the details to onboard a new client and automatically start their first engagement.</p>
+            <div class="form-group mb-3"><label class="form-label">Client Name *</label><input type="text" class="form-input" placeholder="e.g. Acme Corporation"></div>
+            <div class="form-group mb-3"><label class="form-label">Entity Type *</label><select class="form-input"><option value="">Select entity type...</option><option>Corporation</option><option>Sole Proprietor</option><option>Partnership</option></select></div>
+            <div class="form-group mb-3"><label class="form-label">Contact Email</label><input type="email" class="form-input" placeholder="contact@client.com"></div>
+            <div class="form-group mb-4"><label class="form-label">Engagement Period *</label><input type="text" class="form-input" placeholder="e.g. Q3 2026 or FY 2026"></div>
+            <div class="flex gap-2">
+              <button class="btn btn-secondary" onclick="navigateTo('clients')">Cancel</button>
+              <button class="btn btn-primary" style="flex:1" onclick="showToast('Client created successfully!');navigateTo('client-detail')">Create Client & Start Engagement</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== CLIENT DETAIL ========== -->
+    <div class="content hidden" id="page-client-detail">
+      <div class="flex justify-between items-center mb-3">
+        <div>
+          <h2 style="font-size:1.5rem;font-weight:700">NorthStar Collective</h2>
+        </div>
+        <button class="btn btn-secondary btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Edit Client</button>
+      </div>
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab(this,'overview')">Overview</div>
+        <div class="tab" onclick="switchTab(this,'documents')">Documents</div>
+      </div>
+      <div id="tab-overview">
+        <div class="detail-grid">
+          <div class="detail-card">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"><h3 style="margin-bottom:0">Client Profile</h3><span class="badge badge-warning badge-dot">Pending</span></div>
+            <div class="detail-row"><span class="label">Client Name</span><span class="value">NorthStar Collective</span></div>
+            <div class="detail-row"><span class="label">Entity Type</span><span class="value">Corporation</span></div>
+            <div class="detail-row"><span class="label">Contact Email</span><span class="value">admin@northstar.co</span></div>
+            <div class="detail-row"><span class="label">Created</span><span class="value">Jan 15, 2024</span></div>
+            <button class="btn btn-primary btn-block mt-3" onclick="navigateTo('workflow-detail')">Review Setup Progress →</button>
+          </div>
+          <div class="detail-card">
+            <h3>Active Engagement</h3>
+            <div class="detail-row"><span class="label">Period</span><span class="value">Fiscal Audit 2024</span></div>
+            <div class="detail-row"><span class="label">Current Phase</span><span class="value"><span class="badge badge-primary">Phase 3</span></span></div>
+            <div class="detail-row"><span class="label">Status</span><span class="value"><span class="badge badge-success">Active</span></span></div>
+            <div class="detail-row"><span class="label">Pending Actions</span><span class="value">3</span></div>
+            <button class="btn btn-primary btn-block mt-3" onclick="navigateTo('bookkeeping-detail')">View Workflow →</button>
+          </div>
+          <div class="detail-card full-span">
+            <h3>Quick Stats</h3>
+            <div class="stat-grid">
+              <div class="stat-item"><div class="value">12</div><div class="label">Documents Uploaded</div></div>
+              <div class="stat-item"><div class="value">4 / 15</div><div class="label">Tasks Completed</div></div>
+              <div class="stat-item"><div class="value">67%</div><div class="label">AI Accuracy</div></div>
+              <div class="stat-item"><div class="value">28 days</div><div class="label">Engagement Age</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="tab-documents" class="hidden">
+        <div class="upload-zone mb-4" id="client-upload-zone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <p>Drag and drop files here, or <span class="browse">browse</span></p>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead><tr><th>Filename</th><th>Phase</th><th>Uploaded By</th><th>Date</th></tr></thead>
+            <tbody>
+              <tr><td><span style="color:var(--primary);font-weight:500;cursor:pointer">engagement_letter_northstar.pdf</span></td><td>Phase 1</td><td>Arthur Chen</td><td>Jan 16, 2024</td></tr>
+              <tr><td><span style="color:var(--primary);font-weight:500;cursor:pointer">cra_authorization.pdf</span></td><td>Phase 1</td><td>Arthur Chen</td><td>Jan 18, 2024</td></tr>
+              <tr><td><span style="color:var(--primary);font-weight:500;cursor:pointer">prior_year_returns_2023.pdf</span></td><td>Phase 1</td><td>System (AI)</td><td>Jan 20, 2024</td></tr>
+              <tr><td><span style="color:var(--primary);font-weight:500;cursor:pointer">ledger_import_erp_export.csv</span></td><td>Phase 2</td><td>Arthur Chen</td><td>Feb 5, 2024</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== SETTINGS ========== -->
+    <div class="content hidden" id="page-settings">
+      <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:24px">Settings</h2>
+      <div class="settings-section">
+        <div class="flex justify-between items-center mb-3">
+          <div><h3>Staff Management</h3><div class="desc">Manage team members and their roles within the firm.</div></div>
+          <button class="btn btn-primary btn-sm" onclick="openModal('invite-modal')"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Invite Staff</button>
+        </div>
+        <table class="data-table" style="margin:0 -24px;width:calc(100% + 48px)">
+          <thead><tr><th style="padding-left:24px">Name</th><th>Email</th><th>Role</th><th style="text-align:right;padding-right:24px">Actions</th></tr></thead>
+          <tbody>
+            <tr><td style="padding-left:24px"><div class="client-cell"><div class="client-avatar" style="background:var(--primary)">AC</div><strong>Arthur Chen</strong></div></td><td>arthur@architectledger.com</td><td><span class="badge badge-primary">Admin</span></td><td style="text-align:right;padding-right:24px"><span class="text-muted text-sm">You</span></td></tr>
+            <tr><td style="padding-left:24px"><div class="client-cell"><div class="client-avatar" style="background:#10B981">SJ</div>Sarah Johnson</div></td><td>sarah@architectledger.com</td><td><span class="badge badge-neutral">Accountant</span></td><td style="text-align:right;padding-right:24px"><button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="openModal('confirm-modal')">Remove</button></td></tr>
+            <tr><td style="padding-left:24px"><div class="client-cell"><div class="client-avatar" style="background:#8B5CF6">ML</div>Michael Lee</div></td><td>michael@architectledger.com</td><td><span class="badge badge-neutral">Accountant</span></td><td style="text-align:right;padding-right:24px"><button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="openModal('confirm-modal')">Remove</button></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="settings-section">
+        <h3>Firm Profile</h3>
+        <div class="desc">Basic information about your accounting firm.</div>
+        <div class="settings-form">
+          <div class="form-group mb-3"><label class="form-label">Firm Name</label><input type="text" class="form-input" value="Architect Ledger"></div>
+          <button class="btn btn-primary" onclick="showToast('Firm profile saved!')">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== HITL PANEL ==================== -->
+<div class="panel-overlay" id="panel-overlay" onclick="closeHITLPanel()"></div>
+<div class="slide-panel" id="hitl-panel">
+  <div class="panel-header">
+    <div>
+      <h3>Configure Xero Organization</h3>
+      <div class="meta">NorthStar Collective — Client Setup · Phase 2</div>
+      <span class="badge badge-warning mt-2">In Progress</span>
+    </div>
+    <button class="panel-close" onclick="closeHITLPanel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <div class="panel-section-title">Agent Output</div>
+      <div class="agent-output"><p>The AI agent has prepared a <strong>Xero setup checklist</strong> for NorthStar Collective, including chart of accounts configuration, bank feed connections, and API access credentials.</p></div>
+      <div class="file-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg><div class="file-info"><div class="file-name">xero_setup_checklist.pdf</div><div class="file-size">18.7 KB</div></div><span class="download-btn">Download</span></div>
+      <div class="file-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg><div class="file-info"><div class="file-name">chart_of_accounts_template.csv</div><div class="file-size">4.2 KB</div></div><span class="download-btn">Download</span></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Action Required</div>
+      <ol class="action-steps">
+        <li>Log in to Xero and create the organization for NorthStar Collective</li>
+        <li>Import the chart of accounts template provided above</li>
+        <li>Connect the client's bank feeds in Xero</li>
+        <li>Generate API credentials and note the access token</li>
+        <li>Confirm completion below to proceed to CRA setup</li>
+      </ol>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Upload Verification Files</div>
+      <div class="upload-zone" id="hitl-upload-zone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p>Drag and drop files here, or <span class="browse">browse</span></p>
+      </div>
+      <div class="uploaded-files" id="hitl-uploaded-files"></div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-secondary" onclick="closeHITLPanel()">Cancel</button>
+    <button class="btn btn-primary" style="flex:1" onclick="openModal('confirm-complete-modal')">Mark as Complete</button>
+  </div>
+</div>
+
+<!-- ==================== BOOKKEEPING HITL PANEL ==================== -->
+<div class="panel-overlay" id="bk-panel-overlay" onclick="closeBookkeepingHITLPanel()"></div>
+<div class="slide-panel" id="bk-hitl-panel">
+  <div class="panel-header">
+    <div>
+      <h3>Verify Receipt Mappings</h3>
+      <div class="meta">NorthStar Collective — Fiscal Audit 2024</div>
+      <span class="badge badge-warning mt-2">In Progress</span>
+    </div>
+    <button class="panel-close" onclick="closeBookkeepingHITLPanel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="panel-body">
+    <div class="panel-section">
+      <div class="panel-section-title">Agent Output</div>
+      <div class="agent-output"><p>The AI agent analyzed 342 ledger entries and identified <strong>8 discrepancies</strong> requiring manual verification against physical receipts. A detailed mapping report has been generated.</p></div>
+      <div class="file-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg><div class="file-info"><div class="file-name">receipt_mapping_report.csv</div><div class="file-size">24.3 KB</div></div><span class="download-btn">Download</span></div>
+      <div class="file-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><polyline points="14 2 14 8 20 8"/></svg><div class="file-info"><div class="file-name">discrepancy_summary.pdf</div><div class="file-size">156 KB</div></div><span class="download-btn">Download</span></div>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Action Required</div>
+      <ol class="action-steps">
+        <li>Download the receipt mapping report above</li>
+        <li>Cross-reference entries with physical receipts in your filing system</li>
+        <li>For each discrepancy, confirm or reject the AI's categorization in Xero</li>
+        <li>Export the reconciliation report from Xero</li>
+        <li>Upload the reconciliation report below</li>
+      </ol>
+    </div>
+    <div class="panel-section">
+      <div class="panel-section-title">Upload Verification Files</div>
+      <div class="upload-zone" id="bk-hitl-upload-zone">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        <p>Drag and drop files here, or <span class="browse">browse</span></p>
+      </div>
+      <div class="uploaded-files" id="bk-hitl-uploaded-files"></div>
+    </div>
+  </div>
+  <div class="panel-footer">
+    <button class="btn btn-secondary" onclick="closeBookkeepingHITLPanel()">Cancel</button>
+    <button class="btn btn-primary" style="flex:1" onclick="openModal('bk-confirm-complete-modal')">Mark as Complete</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="bk-confirm-complete-modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>Complete Task</h3><button class="panel-close" onclick="closeModal('bk-confirm-complete-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body"><p>This will advance the workflow to the next step. The AI agent will begin processing the uploaded files. <strong>Continue?</strong></p></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('bk-confirm-complete-modal')">Cancel</button><button class="btn btn-primary" onclick="showToast('Task completed! Workflow advancing...');closeModal('bk-confirm-complete-modal');closeBookkeepingHITLPanel()">Confirm & Advance</button></div>
+  </div>
+</div>
+
+<!-- ==================== MODALS ==================== -->
+<div class="modal-overlay" id="invite-modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>Invite Staff Member</h3><button class="panel-close" onclick="closeModal('invite-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body">
+      <div class="form-group mb-3"><label class="form-label">Email Address</label><input type="email" class="form-input" placeholder="colleague@firm.com"></div>
+      <div class="form-group"><label class="form-label">Role</label><select class="form-input"><option>Accountant</option><option>Admin</option></select></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('invite-modal')">Cancel</button><button class="btn btn-primary" onclick="showToast('Invitation sent!');closeModal('invite-modal')">Send Invite</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>Remove Staff Member</h3><button class="panel-close" onclick="closeModal('confirm-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body"><p>Are you sure you want to remove this staff member? They will lose access to the platform immediately.</p></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('confirm-modal')">Cancel</button><button class="btn btn-danger" onclick="showToast('Staff member removed.');closeModal('confirm-modal')">Remove</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="confirm-complete-modal">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header"><h3>Complete Task</h3><button class="panel-close" onclick="closeModal('confirm-complete-modal')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+    <div class="modal-body"><p>This will mark Xero configuration as complete and advance to the next setup task. The AI agent will validate the platform configuration. <strong>Continue?</strong></p></div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal('confirm-complete-modal')">Cancel</button><button class="btn btn-primary" onclick="showToast('Task completed! Workflow advancing...');closeModal('confirm-complete-modal');closeHITLPanel()">Confirm & Advance</button></div>
+  </div>
+</div>
+
+<!-- ==================== TOAST ==================== -->
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span id="toast-msg"></span></div>
+
+<script>
+const pages = {
+  login: { shell: false, breadcrumb: '' },
+  verify: { shell: false, breadcrumb: '' },
+  dashboard: { shell: true, breadcrumb: '<a onclick="navigateTo(\'dashboard\')">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Dashboard</span>', nav: 'dashboard' },
+  tasks: { shell: true, breadcrumb: '<a onclick="navigateTo(\'dashboard\')">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Tasks</span>', nav: 'tasks' },
+  'workflow-detail': { shell: true, breadcrumb: '<a onclick="navigateTo(\'clients\')">Clients</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><a onclick="navigateTo(\'client-detail\')">NorthStar Collective</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Client Setup</span>', nav: 'clients' },
+  'bookkeeping-detail': { shell: true, breadcrumb: '<a onclick="navigateTo(\'clients\')">Clients</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><a onclick="navigateTo(\'client-detail\')">NorthStar Collective</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Fiscal Audit 2024</span>', nav: 'clients' },
+  clients: { shell: true, breadcrumb: '<a onclick="navigateTo(\'dashboard\')">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Clients</span>', nav: 'clients' },
+  'clients-new': { shell: true, breadcrumb: '<a onclick="navigateTo(\'clients\')">Clients</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">New Client</span>', nav: 'clients' },
+  'client-detail': { shell: true, breadcrumb: '<a onclick="navigateTo(\'clients\')">Clients</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">NorthStar Collective</span>', nav: 'clients' },
+  settings: { shell: true, breadcrumb: '<a onclick="navigateTo(\'dashboard\')">Home</a><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span class="current">Settings</span>', nav: 'settings' }
+};
+
+function navigateTo(page) {
+  const config = pages[page];
+  if (!config) return;
+
+  document.querySelectorAll('[id^="page-"]').forEach(el => {
+    el.classList.add('hidden');
+    if (el.style) el.style.display = '';
+  });
+  document.getElementById('app-shell').classList.toggle('hidden', !config.shell);
+  const pageEl = document.getElementById('page-' + page);
+  if (pageEl) {
+    pageEl.classList.remove('hidden');
+    if (page === 'clients-new') pageEl.style.display = 'flex';
+  }
+
+  if (config.shell) {
+    document.getElementById('breadcrumb').innerHTML = config.breadcrumb;
+    document.querySelectorAll('.nav-link').forEach(l => l.classList.toggle('active', l.dataset.page === config.nav));
+  }
+
+  document.getElementById('user-popover').classList.remove('show');
+  document.querySelector('.sidebar-user')?.classList.remove('open');
+  closeHITLPanel();
+  closeBookkeepingHITLPanel();
+  window.scrollTo(0, 0);
+  history.pushState(null, '', '#' + page);
+}
+
+function filterDashboard(pill, category) {
+  document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+  pill.classList.add('active');
+  document.querySelectorAll('.action-card, .empty-card').forEach(card => {
+    if (category === 'all') { card.style.display = ''; return; }
+    const cat = card.dataset.category;
+    card.style.display = (cat === category || cat === 'all') ? '' : 'none';
+  });
+}
+
+function togglePhase(panel) {
+  if (panel.classList.contains('locked')) return;
+  panel.classList.toggle('expanded');
+}
+
+function openHITLPanel() {
+  document.getElementById('panel-overlay').classList.add('show');
+  document.getElementById('hitl-panel').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeHITLPanel() {
+  document.getElementById('panel-overlay').classList.remove('show');
+  document.getElementById('hitl-panel').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function openBookkeepingHITLPanel() {
+  document.getElementById('bk-panel-overlay').classList.add('show');
+  document.getElementById('bk-hitl-panel').classList.add('show');
+  document.body.style.overflow = 'hidden';
+}
+function closeBookkeepingHITLPanel() {
+  document.getElementById('bk-panel-overlay').classList.remove('show');
+  document.getElementById('bk-hitl-panel').classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+function switchTab(tab, name) {
+  tab.parentElement.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.getElementById('tab-overview').classList.toggle('hidden', name !== 'overview');
+  document.getElementById('tab-documents').classList.toggle('hidden', name !== 'documents');
+}
+
+function openModal(id) { document.getElementById(id).classList.add('show'); }
+function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', () => m.classList.remove('show')));
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show', 'success');
+  setTimeout(() => t.classList.remove('show', 'success'), 3500);
+}
+
+// Code input auto-advance
+document.querySelectorAll('.code-input').forEach((input, i, arr) => {
+  input.addEventListener('input', () => { if (input.value && i < arr.length - 1) arr[i + 1].focus(); });
+  input.addEventListener('keydown', (e) => { if (e.key === 'Backspace' && !input.value && i > 0) arr[i - 1].focus(); });
+});
+
+// Upload zone interactions
+['hitl-upload-zone', 'client-upload-zone', 'bk-hitl-upload-zone'].forEach(id => {
+  const zone = document.getElementById(id);
+  if (!zone) return;
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('dragover'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+  zone.addEventListener('drop', e => { e.preventDefault(); zone.classList.remove('dragover'); addUploadedFile(id); });
+  zone.addEventListener('click', () => addUploadedFile(id));
+});
+
+function addUploadedFile(zoneId) {
+  const container = zoneId === 'hitl-upload-zone' ? document.getElementById('hitl-uploaded-files') : zoneId === 'bk-hitl-upload-zone' ? document.getElementById('bk-hitl-uploaded-files') : null;
+  if (!container) return;
+  const names = ['reconciliation_report.xlsx', 'receipt_verification.pdf', 'bank_statement_march.pdf'];
+  const name = names[container.children.length % names.length];
+  const div = document.createElement('div');
+  div.className = 'uploaded-file';
+  div.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>' + name + '<span class="remove" onclick="this.parentElement.remove()">✕</span>';
+  container.appendChild(div);
+}
+
+function toggleSidebar() {
+  document.querySelector('.sidebar').classList.toggle('collapsed');
+}
+
+// Handle initial route
+const hash = window.location.hash.slice(1);
+navigateTo(hash && pages[hash] ? hash : 'login');
+window.addEventListener('popstate', () => {
+  const h = window.location.hash.slice(1);
+  if (h && pages[h]) navigateTo(h);
+});
+
+// Close popover on outside click
+document.addEventListener('click', e => {
+  const footer = document.querySelector('.sidebar-footer');
+  if (footer && !footer.contains(e.target)) {
+    document.getElementById('user-popover').classList.remove('show');
+    document.querySelector('.sidebar-user')?.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
