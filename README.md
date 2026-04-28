@@ -9,7 +9,6 @@ Public-facing **product and feature design** work: narratives, prototypes, and i
 | Project | Summary | Link |
 |--------|---------|------|
 | **Architect Ledger — AI Bookkeeping** | High-fidelity **HTML/CSS/JS** prototype for an AI-assisted bookkeeping platform: HITL workflows, phased client engagements, dashboard and task log. Includes **technical stack** and how to run the demo. | [`AI-accounting/README.md`](AI-accounting/README.md) · [Open prototype](AI-accounting/prototype.html) |
-| **MVP implementation notes (Notion)** | Living doc for MVP scope and implementation alignment (external). | [Notion — MVP version implementation page](https://www.notion.so/MVP-version-implementation-page-34c8d41a5cff80fb855ff9f5cd4c57ca?source=copy_link) |
 
 *Add new rows above as you publish additional case studies or demos.*
 
