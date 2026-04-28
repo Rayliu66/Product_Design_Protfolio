@@ -1,0 +1,5 @@
+# Dependencies (Playwright lives under project folders after `npm install`)
+node_modules/
+
+# macOS
+.DS_Store
